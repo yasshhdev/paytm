@@ -37,7 +37,7 @@ export default function Signup (){
         if(!validate.success){return alert("Enter proper credentials")}
 
 
-        const x = await axios.post("/api/v1/user",{
+        const x = await axios.post("/api/v1/signup",{
                 email :emailref.current?.value,
                 firstname : firstref.current?.value,
                  lastname :lastref.current?.value,

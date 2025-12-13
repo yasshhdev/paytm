@@ -1,5 +1,5 @@
 
-import { UserModel } from "@/app/db";
+import { UserModel } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose, { mongo } from "mongoose";
 
@@ -10,7 +10,7 @@ import mongoose, { mongo } from "mongoose";
 
    await mongoose.connect(process.env.DATABASE_URL)
 
-})();
+})(); 
 export async function POST(req:NextRequest){
 
     try {
