@@ -1,10 +1,7 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import  CredentialsProvider  from "next-auth/providers/credentials"
-import Google from "next-auth/providers/google"
-import twitter from "next-auth/providers/twitter"
-import { userAgent } from "next/server"
 
-const handler = NextAuth({
+export const authoptions:NextAuthOptions  = {
 
     providers:[
 
@@ -33,6 +30,7 @@ const handler = NextAuth({
         
   ],
     
-})
+}
+const handler = NextAuth (authoptions); 
 
 export { handler as GET, handler as POST }
