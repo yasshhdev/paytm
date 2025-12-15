@@ -1,5 +1,8 @@
+import { UserModel } from "@/lib/db"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import  CredentialsProvider  from "next-auth/providers/credentials"
+import bcrypt from "bcrypt"
+
 
 export const authoptions:NextAuthOptions  = {
 
@@ -8,25 +11,44 @@ export const authoptions:NextAuthOptions  = {
         CredentialsProvider ({
             name:"Email" , 
             credentials :{
-                username : {label:"Username", type:"text" , placeholder:"xxx"},
-                password : {label:"Password" , type:"password" , placeholder:"xxx"}
+                email :{label:"Email" , type:"text" , placeholder:"xyz@gmail.com"},
+                name : {label:"Username", type:"text" , placeholder:""},
+                password : {label:"Password" , type:"password" , placeholder:""}
             },
             
             async authorize (credentials){
-                console.log(credentials?.username)
-                console.log(credentials?.password)
-                if (!credentials?.username || !credentials.password){
+
+                if (!credentials?.name || !credentials.password || !credentials.email){
                     return null
                 }
-                if (credentials.username === "yash" && credentials.password ==="855")
-                {
-                             return { id: "1", name: "Yash" }; 
-                }
+               
+                
+
+                const user = await UserModel.findOne({
+                    email:credentials.email
+
+                })
+
+                    if(!user){
+                    return null
+                      }
+            
+                const hashed =await bcrypt.compare(credentials.password,user?.password)
+                
+                if(hashed)
+                    {
+                        return { id: user._id.toString(),
+                            email: user.email,
+                            name: user.name
+                             }
+                            }
+            
                 
 
                 return null
             },
         }),
+        
         
   ],
     

@@ -11,34 +11,37 @@ export default function Signup (){
     
 
     const emailref = useRef <HTMLInputElement | null>(null)
-    const firstref = useRef <HTMLInputElement | null>(null)
-    const lastref = useRef <HTMLInputElement | null>(null)
+    const nameref = useRef <HTMLInputElement | null>(null)
     const passref = useRef <HTMLInputElement | null>(null)
 
 
     async function siup(){
 
-        const zonSchema =  z.object({
-            email : z.string(),
-            firstname : z.string(),
-            lastname :z.string(),
-            password: z.string()
+        const zodSchema =  z.object({
+            email: z.string().email("Invalid email"),
+            name: z.string().min(1, "Name is required"),
+            password: z.string().min(6, "Password must be at least 6 chars"), 
 
         })
          
-        const validate = zonSchema.safeParse({
-                email :emailref.current?.value,
-                firstname : firstref.current?.value,
-                 lastname :lastref.current?.value,
-                 password  :passref.current?.value})
+            const validate = zodSchema.safeParse({
+                    email: emailref.current?.value ?? "",
+                    name: nameref.current?.value ?? "",
+                    password: passref.current?.value ?? "",
+            });
 
-        if(!validate.success){return alert("Enter proper credentials")}
+            if (!validate.success) {
+              alert(validate.error.issues[0].message);
+            return;
+            }
 
 
+            try {
+
+                
         const x = await axios.post("/api/signup",{
                 email :emailref.current?.value,
-                firstname : firstref.current?.value,
-                 lastname :lastref.current?.value,
+                 name:nameref.current?.value,
                  password  :passref.current?.value
         })
         if (x.status===200){
@@ -46,8 +49,14 @@ export default function Signup (){
             router.push("/")
 
         }
-        else if (x.status === 401) {alert("Nah bro same emnal id")}
-        else {alert("Nah bro fucked up")}
+            }catch (err: any) {
+                if (err.response?.status === 401) {
+                    alert("Email already exists");
+                } else {
+                    alert("Signup failed");
+                }
+                }
+        
     }
 
 
@@ -55,11 +64,10 @@ export default function Signup (){
     return (
         <div className="m-3 p-3">
             <input type="text" placeholder="email" ref = {emailref}/>
-            <input type="text" placeholder="firstname"  ref={firstref}/>
-            <input type="text" placeholder="lastname"  ref={lastref}/>
+            <input type="text" placeholder="Name"  ref={nameref}/>
             <input type="password" placeholder="password" ref={passref}/>
 
-            <button onClick={siup}>Signup</button>
+            <button onClick={siup} className="cursor-pointer">Signup</button>
         </div>
     )
 

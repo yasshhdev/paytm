@@ -2,7 +2,7 @@
 import { UserModel } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-
+import bcrypt from "bcrypt"
 
 
 
@@ -11,22 +11,31 @@ import mongoose from "mongoose";
    await mongoose.connect(process.env.DATABASE_URL)
 
 })();
+
+
 export async function POST(req:NextRequest){
 
     try {
 
-    const {email,firstname , lastname , password}  = await req.json()
-    //done zod validation in fe
+    const {email,name, password}  = await req.json()
+
+        if (!email || !name || !password) {
+         return NextResponse.json(
+                    { error: "Missing fields" },
+                    { status: 400 }
+                );
+        }
+
 
         const exist = await UserModel.findOne({
             email:email
         })
         if (exist ){return NextResponse.json({status:401,msg:"Email already exist"})}
 
-        
+        const hashed =await bcrypt.hash(password,5)
 
     const x =await UserModel.create({
-        email,firstname,lastname,password
+        email,name,password:hashed
     })
     if(x)
     {
