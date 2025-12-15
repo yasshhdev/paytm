@@ -2,6 +2,7 @@ import { UserModel } from "@/lib/db"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import  CredentialsProvider  from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
+import GoogleProvider from "next-auth/providers/google"
 
 
 export const authoptions:NextAuthOptions  = {
@@ -11,7 +12,7 @@ export const authoptions:NextAuthOptions  = {
         CredentialsProvider ({
             name:"Email" , 
             credentials :{
-                email :{label:"Email" , type:"text" , placeholder:"xyz@gmail.com"},
+                email :{label:"Email" , type:"text" , placeholder:""},
                 name : {label:"Username", type:"text" , placeholder:""},
                 password : {label:"Password" , type:"password" , placeholder:""}
             },
@@ -48,7 +49,9 @@ export const authoptions:NextAuthOptions  = {
                 return null
             },
         }),
-        
+        GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!, })
         
   ],
     
