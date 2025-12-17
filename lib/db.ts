@@ -7,6 +7,11 @@ const UserSchema = new Schema ({
     password : {type:String , required:true}
 })
 
+const AccountSchema = new Schema ({
+    account_no : {type : String , required :true },
+    user_id : {type : mongoose.Types.ObjectId , ref:"User"}
+})
+
 
 
 
