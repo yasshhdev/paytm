@@ -39,11 +39,12 @@ export const authoptions:NextAuthOptions  = {
                 
                 if(hashed)
                     {
-                        return { id: user._id.toString(),
+                        return { 
+                            id: user._id.toString(),
                             email: user.email,
                             name: user.name
                              }
-                            }
+                    }
             
                 
 
